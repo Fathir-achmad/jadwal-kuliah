@@ -48,10 +48,10 @@ export const ScheduleTable = () => {
           <Thead bg="blue.600">
            <Tr>
             <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Tanggal</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Mata Kuliah</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Dosen</Th>
             <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Hari</Th>
             <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Jam</Th>
+            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Mata Kuliah</Th>
+            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Dosen</Th>
             <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Pertemuan</Th>
             <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Mode</Th>
             </Tr>
@@ -67,10 +67,10 @@ export const ScheduleTable = () => {
                     day: "numeric",
                   })}
                 </Td>
-                <Td fontWeight="bold">{cls.subject}</Td>
-                <Td>{cls.lecturer}</Td>
                 <Td>{cls.day}</Td>
                 <Td>{cls.time}</Td>
+                <Td fontWeight="bold">{cls.subject}</Td>
+                <Td>{cls.lecturer}</Td>
                 <Td>{cls.label}</Td>
                 <Td>
                   <Badge

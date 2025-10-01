@@ -1,6 +1,7 @@
 import { Box, Center } from "@chakra-ui/react";
 import { Clock } from "../components/clock";
 import { NextClass } from "../components/jadwal";
+import { ScheduleTable } from "../components/allJadwal";
 
 export const HomePage = () => {
   return (
@@ -19,6 +20,9 @@ export const HomePage = () => {
             <NextClass />
           </Box>
         </Box>
+      </Center>
+      <Center>
+          <ScheduleTable/>
       </Center>
     </Box>
   );

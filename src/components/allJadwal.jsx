@@ -41,19 +41,41 @@ export const ScheduleTable = () => {
   );
 
   return (
-    <Box maxW="60vw" mx="auto">
+  <Box w="100%" maxW="800px" mx="auto">
       {/* Scrollable Table */}
-      <TableContainer maxH="60vh" overflowY="auto" bg="white" borderRadius="md" p={1}>
-        <Table variant="striped" colorScheme="blue" size="sm">
+      <TableContainer
+        maxH="60vh"
+        overflowY="auto"
+        overflowX="auto" // scroll horizontal untuk layar kecil
+        bg="white"
+        borderRadius="md"
+        p={1}
+        w="100%"
+      >
+        <Table variant="striped" colorScheme="blue" size="sm" w="100%">
           <Thead bg="blue.600">
-           <Tr>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Tanggal</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Hari</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Jam</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Mata Kuliah</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Dosen</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Pertemuan</Th>
-            <Th color="white" fontSize="lg" fontWeight="bold" py={4}>Mode</Th>
+            <Tr>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Tanggal
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Hari
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Jam
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Mata Kuliah
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Dosen
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Pertemuan
+              </Th>
+              <Th color="white" fontSize="lg" fontWeight="bold" py={4}>
+                Mode
+              </Th>
             </Tr>
           </Thead>
           <Tbody>

@@ -1,0 +1,20 @@
+{
+  "short_name": "Jadwal",
+  "name": "Jadwal Kuliah MM Unsurya",
+  "icons": [
+    {
+      "src": "fas.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "fas.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

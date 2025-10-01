@@ -23,6 +23,8 @@ export const NextClass = () => {
             meetingLabel: m.label,
             meetingDate: mDate,
             mode: m.mode,
+            time: course.time,
+            day: course.day,
           });
         }
       });
@@ -81,23 +83,30 @@ export const NextClass = () => {
             rounded="md"
             boxShadow="md"
           >
-            <Flex direction="row" justify="space-between" align="center">
+            <Flex direction="row" justify="space-between" align="flex-start">
               {/* Kiri: Detail kelas */}
               <Box>
                 <Text fontWeight="bold" mb={2}>
                   {cls.subject}
                 </Text>
-                <Text fontSize="sm">Dosen : {cls.lecturer}</Text>
-                <Text fontSize="sm">Hari : {cls.day}</Text>
-                <Text fontSize="sm">Jam : {cls.time}</Text>
-                <Text fontSize="sm">Pertemuan : {cls.meetingLabel}</Text>
+                <Text fontSize="sm">Dosen: {cls.lecturer}</Text>
+                {/* <Text fontSize="sm">Hari: {cls.day}</Text> */}
+                <Text fontSize="sm">
+                  Tanggal: {cls.meetingDate.toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Text>
+                <Text fontSize="sm">Jam: {cls.time}</Text>
+                <Text fontSize="sm">Pertemuan: {cls.meetingLabel}</Text>
               </Box>
 
               {/* Kanan: Badge mode */}
               <Badge
                 colorScheme={cls.mode === "offline" ? "red" : "green"}
                 fontSize={{ base: "0.7em", md: "0.9em" }}
-                alignSelf="flex-start"
                 ml={4}
               >
                 {cls.mode === "offline" ? "Offline" : "Online"}

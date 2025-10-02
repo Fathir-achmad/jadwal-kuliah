@@ -104,13 +104,28 @@ export const NextClass = () => {
               </Box>
 
               {/* Kanan: Badge mode */}
-              <Badge
-                colorScheme={cls.mode === "offline" ? "red" : "green"}
-                fontSize={{ base: "0.7em", md: "0.9em" }}
-                ml={4}
-              >
-                {cls.mode === "offline" ? "Offline" : "Online"}
-              </Badge>
+              <Flex direction="column" justify="space-between" align="flex-start" gap={2}>
+                <Badge
+                  colorScheme={cls.mode === "offline" ? "red" : "green"}
+                  fontSize={{ base: "0.7em", md: "0.9em" }}
+                  ml={4}
+                >
+                  {cls.mode === "offline" ? "Offline" : "Online"}
+                </Badge>
+                <Badge
+                  colorScheme={
+                    cls.day === "Jum'at"
+                      ? "red"       // Highlight merah untuk Jumat
+                      : cls.mode === "offline"
+                      ? "red"
+                      : "green"
+                  }
+                  fontSize={{ base: "0.7em", md: "0.9em" }}
+                  ml={4}
+                >
+                  {cls.day === "Jum'at" ? "HANYA ABSEN" : cls.mode === "offline" ? "Offline" : "Online"}
+                </Badge>
+              </Flex>
             </Flex>
           </Box>
         ))}

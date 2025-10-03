@@ -9,28 +9,48 @@ function getRandomColor() {
 
 export const NextClass = () => {
   const [nextDateClasses, setNextDateClasses] = useState([]);
-
+  
   useEffect(() => {
-    const today = new Date();
+    const now = new Date();
     const upcoming = [];
 
     schedule.forEach((course) => {
       course.meetings.forEach((m) => {
         const mDate = new Date(m.date);
-        if (mDate >= today) {
+
+        // ✅ ambil jam dari meeting, bukan dari course
+        const [startStr, endStr] = m.time.split(" - ");
+        const [sh, sm] = startStr.split(".").map(Number);
+        const [eh, em] = endStr.split(".").map(Number);
+
+        const startTime = new Date(mDate);
+        startTime.setHours(sh, sm, 0, 0);
+
+        const endTime = new Date(mDate);
+        endTime.setHours(eh, em, 0, 0);
+
+        // ✅ logika cek: apakah jadwal ini masih akan datang / belum selesai
+        if (
+          mDate.toDateString() > now.toDateString() ||
+          (mDate.toDateString() === now.toDateString() && now <= endTime)
+        ) {
           upcoming.push({
-            ...course,
+            subject: course.subject,
+            lecturer: course.lecturer,
             meetingLabel: m.label,
             meetingDate: mDate,
             mode: m.mode,
-            time: course.time,
-            day: course.day,
+            time: m.time,
+            day: m.day,
+            startTime,
+            endTime,
           });
         }
       });
     });
 
-    upcoming.sort((a, b) => a.meetingDate - b.meetingDate);
+    // urutkan berdasarkan startTime
+    upcoming.sort((a, b) => a.startTime - b.startTime);
 
     if (upcoming.length > 0) {
       const nearestDate = upcoming[0].meetingDate.toDateString();
@@ -90,7 +110,6 @@ export const NextClass = () => {
                   {cls.subject}
                 </Text>
                 <Text fontSize="sm">Dosen: {cls.lecturer}</Text>
-                {/* <Text fontSize="sm">Hari: {cls.day}</Text> */}
                 <Text fontSize="sm">
                   Tanggal: {cls.meetingDate.toLocaleDateString("id-ID", {
                     weekday: "long",
@@ -115,7 +134,7 @@ export const NextClass = () => {
                 <Badge
                   colorScheme={
                     cls.day === "Jum'at"
-                      ? "red"       // Highlight merah untuk Jumat
+                      ? "red"
                       : cls.mode === "offline"
                       ? "red"
                       : "green"
@@ -123,7 +142,7 @@ export const NextClass = () => {
                   fontSize={{ base: "0.7em", md: "0.9em" }}
                   ml={4}
                 >
-                  {cls.day === "Jum'at" ? "HANYA ABSEN" : cls.mode === "offline" ? "Offline" : "Online"}
+                  {cls.day === "Jum'at" ? "HANYA ABSEN" : undefined}
                 </Badge>
               </Flex>
             </Flex>

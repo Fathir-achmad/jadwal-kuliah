@@ -141,8 +141,12 @@ export const NextClass = () => {
                 >
                   {cls.mode === "offline" ? "Offline" : "Online"}
                 </Badge>
-                {cls.day === "Jum'at" && (
-                  <Badge colorScheme="red" fontSize={{ base: "0.7em", md: "0.9em" }} ml={4}>
+                {(cls.day === "Jum'at" || cls.day === "Kamis") && (
+                  <Badge
+                    colorScheme="red"
+                    fontSize={{ base: "0.7em", md: "0.9em" }}
+                    ml={4}
+                  >
                     HANYA ABSEN
                   </Badge>
                 )}

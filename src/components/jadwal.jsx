@@ -9,11 +9,13 @@ function getRandomColor() {
 
 export const NextClass = () => {
   const [nextDateClasses, setNextDateClasses] = useState([]);
+  const [status, setStatus] = useState("upcoming"); // 🔹 bisa "ongoing" atau "upcoming"
 
   useEffect(() => {
     const updateUpcoming = () => {
       const now = new Date();
       const upcoming = [];
+      let ongoingNow = null;
 
       schedule.forEach((course) => {
         course.meetings.forEach((m) => {
@@ -28,9 +30,22 @@ export const NextClass = () => {
           const endTime = new Date(mDate);
           endTime.setHours(eh, em, 0, 0);
 
-          // ✅ logika baru:
-          //  - jika tanggal > hari ini → masukkan
-          //  - jika tanggal == hari ini → hanya masukkan jika sekarang < endTime
+          // 🔹 cek apakah kuliah sedang berlangsung
+          if (now >= startTime && now <= endTime) {
+            ongoingNow = {
+              subject: course.subject,
+              lecturer: course.lecturer,
+              meetingLabel: m.label,
+              meetingDate: mDate,
+              mode: m.mode,
+              time: m.time,
+              day: m.day,
+              startTime,
+              endTime,
+            };
+          }
+
+          // 🔹 simpan jadwal yang akan datang
           if (
             mDate > now ||
             (mDate.toDateString() === now.toDateString() && now < endTime)
@@ -50,27 +65,33 @@ export const NextClass = () => {
         });
       });
 
-      // urutkan berdasarkan waktu mulai
       upcoming.sort((a, b) => a.startTime - b.startTime);
 
-      if (upcoming.length > 0) {
+      if (ongoingNow) {
+        // 🔸 Jika sedang berlangsung
+        setStatus("ongoing");
+        setNextDateClasses([ongoingNow]);
+      } else if (upcoming.length > 0) {
+        // 🔸 Jika belum dimulai (jadwal berikutnya)
         const nearestDate = upcoming[0].meetingDate.toDateString();
         const sameDayClasses = upcoming.filter(
           (c) => c.meetingDate.toDateString() === nearestDate
         );
+        setStatus("upcoming");
         setNextDateClasses(sameDayClasses);
       } else {
+        // 🔸 Tidak ada jadwal
+        setStatus("none");
         setNextDateClasses([]);
       }
     };
 
-    // 🔁 update otomatis tiap menit
     updateUpcoming();
     const interval = setInterval(updateUpcoming, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  if (nextDateClasses.length === 0) {
+  if (status === "none" || nextDateClasses.length === 0) {
     return (
       <Box p={6} rounded="md" bg="gray.700" color="white" textAlign="center">
         <Text>Tidak ada jadwal kuliah berikutnya 🎉</Text>
@@ -89,14 +110,17 @@ export const NextClass = () => {
     <Box
       p={{ base: 4, md: 6 }}
       rounded="md"
-      bg="blue.700"
+      bg={status === "ongoing" ? "green.700" : "blue.700"}
       color="white"
       boxShadow="lg"
       w="100%"
     >
       <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" textAlign="center">
-        Jadwal Kuliah Berikutnya
+        {status === "ongoing"
+          ? "Kuliah Sedang Berlangsung 🎓"
+          : "Jadwal Kuliah Berikutnya"}
       </Text>
+
       <Text fontSize={{ base: "md", md: "lg" }} textAlign="center">
         {dateText}
       </Text>

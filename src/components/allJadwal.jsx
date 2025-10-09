@@ -16,37 +16,47 @@ import { useState } from "react";
 import { schedule } from "../helper/schedule";
 
 export const ScheduleTable = () => {
+  // Gabungkan semua jadwal dari tiap mata kuliah
   const allMeetings = schedule.flatMap((cls) =>
     cls.meetings.map((m) => ({
       subject: cls.subject,
       lecturer: cls.lecturer,
-      day: cls.day,
-      time: cls.time,
+      day: m.day,
+      time: m.time,
       ...m,
     }))
   );
 
+  // Sort berdasarkan tanggal
   const sortedMeetings = allMeetings.sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
 
+  // Filter: hanya tampilkan jadwal dari hari ini ke depan
+  const today = new Date();
+  const upcomingMeetings = sortedMeetings.filter((m) => {
+    const meetingDate = new Date(m.date);
+    // Hilangkan jadwal jika tanggalnya sudah lewat (tanpa mempertimbangkan jam)
+    return meetingDate >= new Date(today.toDateString());
+  });
+
+  // Pagination
   const pageSize = 9;
   const [page, setPage] = useState(1);
-
-  const totalPages = Math.ceil(sortedMeetings.length / pageSize);
+  const totalPages = Math.ceil(upcomingMeetings.length / pageSize);
   const startIndex = (page - 1) * pageSize;
-  const paginatedMeetings = sortedMeetings.slice(
+  const paginatedMeetings = upcomingMeetings.slice(
     startIndex,
     startIndex + pageSize
   );
 
   return (
-  <Box w="100%" maxW="800px" mx="auto">
+    <Box w="100%" maxW="800px" mx="auto">
       {/* Scrollable Table */}
       <TableContainer
         maxH="60vh"
         overflowY="auto"
-        overflowX="auto" // scroll horizontal untuk layar kecil
+        overflowX="auto"
         bg="white"
         borderRadius="md"
         p={1}
@@ -106,30 +116,43 @@ export const ScheduleTable = () => {
                 </Td>
               </Tr>
             ))}
+
+            {/* Jika semua jadwal sudah lewat */}
+            {paginatedMeetings.length === 0 && (
+              <Tr>
+                <Td colSpan={7} textAlign="center" py={6}>
+                  <Text fontWeight="bold" color="gray.600">
+                    Tidak ada jadwal yang akan datang 📅
+                  </Text>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </TableContainer>
 
       {/* Pagination Controls */}
-      <HStack spacing={4} justify="center" mt={4}>
-        <Button
-          size="sm"
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          isDisabled={page === 1}
-        >
-          Prev
-        </Button>
-        <Text color={"white"}>
-          Page {page} of {totalPages}
-        </Text>
-        <Button
-          size="sm"
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-          isDisabled={page === totalPages}
-        >
-          Next
-        </Button>
-      </HStack>
+      {upcomingMeetings.length > 0 && (
+        <HStack spacing={4} justify="center" mt={4}>
+          <Button
+            size="sm"
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            isDisabled={page === 1}
+          >
+            Prev
+          </Button>
+          <Text color={"white"}>
+            Page {page} of {totalPages}
+          </Text>
+          <Button
+            size="sm"
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            isDisabled={page === totalPages}
+          >
+            Next
+          </Button>
+        </HStack>
+      )}
     </Box>
   );
 };

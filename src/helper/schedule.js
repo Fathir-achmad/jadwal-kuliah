@@ -52,7 +52,7 @@ export const schedule = [
     lecturer: "Dr. Syamsunair, S.Sos., M.M., CFrA",
     meetings: [
       { label: "P1-2", date: "2025-10-09", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
-      { label: "P1-2", date: "2025-10-09", mode: "online", day: "Sabtu", time: "08.00 - 10.30" }, // ⚠️ ini agak janggal
+      { label: "P1-2", date: "2025-10-11", mode: "online", day: "Sabtu", time: "08.00 - 10.30" }, // ⚠️ ini agak janggal
       { label: "P3-4", date: "2025-10-23", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
       { label: "P3-4", date: "2025-10-25", mode: "online", day: "Sabtu", time: "08.00 - 10.30" },
       { label: "P5-6", date: "2025-11-06", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
@@ -62,7 +62,7 @@ export const schedule = [
       { label: "UTS", date: "2025-12-06", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
       { label: "P10-11", date: "2025-12-18", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
       { label: "P10-11", date: "2025-12-20", mode: "online", day: "Sabtu", time: "08.00 - 10.30" },
-      { label: "P12-13", date: "2025-12-25", mode: "online", day: "Kamis", time: "18.30 - 21.00" }, // saya betulkan dari "2026-12-25"
+      { label: "P12-13", date: "2026-01-12", mode: "online", day: "Kamis", time: "18.30 - 21.00" }, // saya betulkan dari "2026-12-25"
       { label: "P12-13", date: "2026-01-03", mode: "online", day: "Sabtu", time: "08.00 - 10.30" },
       { label: "P14-15", date: "2026-01-15", mode: "online", day: "Kamis", time: "18.30 - 21.00" },
       { label: "P14-15", date: "2026-01-17", mode: "online", day: "Sabtu", time: "08.00 - 10.30" },

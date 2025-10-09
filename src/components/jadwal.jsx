@@ -9,56 +9,65 @@ function getRandomColor() {
 
 export const NextClass = () => {
   const [nextDateClasses, setNextDateClasses] = useState([]);
-  
+
   useEffect(() => {
-    const now = new Date();
-    const upcoming = [];
+    const updateUpcoming = () => {
+      const now = new Date();
+      const upcoming = [];
 
-    schedule.forEach((course) => {
-      course.meetings.forEach((m) => {
-        const mDate = new Date(m.date);
+      schedule.forEach((course) => {
+        course.meetings.forEach((m) => {
+          const mDate = new Date(m.date);
+          const [startStr, endStr] = m.time.split(" - ");
+          const [sh, sm] = startStr.split(".").map(Number);
+          const [eh, em] = endStr.split(".").map(Number);
 
-        // ✅ ambil jam dari meeting, bukan dari course
-        const [startStr, endStr] = m.time.split(" - ");
-        const [sh, sm] = startStr.split(".").map(Number);
-        const [eh, em] = endStr.split(".").map(Number);
+          const startTime = new Date(mDate);
+          startTime.setHours(sh, sm, 0, 0);
 
-        const startTime = new Date(mDate);
-        startTime.setHours(sh, sm, 0, 0);
+          const endTime = new Date(mDate);
+          endTime.setHours(eh, em, 0, 0);
 
-        const endTime = new Date(mDate);
-        endTime.setHours(eh, em, 0, 0);
-
-        // ✅ logika cek: apakah jadwal ini masih akan datang / belum selesai
-        if (
-          mDate.toDateString() > now.toDateString() ||
-          (mDate.toDateString() === now.toDateString() && now <= endTime)
-        ) {
-          upcoming.push({
-            subject: course.subject,
-            lecturer: course.lecturer,
-            meetingLabel: m.label,
-            meetingDate: mDate,
-            mode: m.mode,
-            time: m.time,
-            day: m.day,
-            startTime,
-            endTime,
-          });
-        }
+          // ✅ logika baru:
+          //  - jika tanggal > hari ini → masukkan
+          //  - jika tanggal == hari ini → hanya masukkan jika sekarang < endTime
+          if (
+            mDate > now ||
+            (mDate.toDateString() === now.toDateString() && now < endTime)
+          ) {
+            upcoming.push({
+              subject: course.subject,
+              lecturer: course.lecturer,
+              meetingLabel: m.label,
+              meetingDate: mDate,
+              mode: m.mode,
+              time: m.time,
+              day: m.day,
+              startTime,
+              endTime,
+            });
+          }
+        });
       });
-    });
 
-    // urutkan berdasarkan startTime
-    upcoming.sort((a, b) => a.startTime - b.startTime);
+      // urutkan berdasarkan waktu mulai
+      upcoming.sort((a, b) => a.startTime - b.startTime);
 
-    if (upcoming.length > 0) {
-      const nearestDate = upcoming[0].meetingDate.toDateString();
-      const sameDayClasses = upcoming.filter(
-        (c) => c.meetingDate.toDateString() === nearestDate
-      );
-      setNextDateClasses(sameDayClasses);
-    }
+      if (upcoming.length > 0) {
+        const nearestDate = upcoming[0].meetingDate.toDateString();
+        const sameDayClasses = upcoming.filter(
+          (c) => c.meetingDate.toDateString() === nearestDate
+        );
+        setNextDateClasses(sameDayClasses);
+      } else {
+        setNextDateClasses([]);
+      }
+    };
+
+    // 🔁 update otomatis tiap menit
+    updateUpcoming();
+    const interval = setInterval(updateUpcoming, 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   if (nextDateClasses.length === 0) {
@@ -111,7 +120,8 @@ export const NextClass = () => {
                 </Text>
                 <Text fontSize="sm">Dosen: {cls.lecturer}</Text>
                 <Text fontSize="sm">
-                  Tanggal: {cls.meetingDate.toLocaleDateString("id-ID", {
+                  Tanggal:{" "}
+                  {cls.meetingDate.toLocaleDateString("id-ID", {
                     weekday: "long",
                     year: "numeric",
                     month: "long",
@@ -131,19 +141,11 @@ export const NextClass = () => {
                 >
                   {cls.mode === "offline" ? "Offline" : "Online"}
                 </Badge>
-                <Badge
-                  colorScheme={
-                    cls.day === "Jum'at"
-                      ? "red"
-                      : cls.mode === "offline"
-                      ? "red"
-                      : "green"
-                  }
-                  fontSize={{ base: "0.7em", md: "0.9em" }}
-                  ml={4}
-                >
-                  {cls.day === "Jum'at" ? "HANYA ABSEN" : undefined}
-                </Badge>
+                {cls.day === "Jum'at" && (
+                  <Badge colorScheme="red" fontSize={{ base: "0.7em", md: "0.9em" }} ml={4}>
+                    HANYA ABSEN
+                  </Badge>
+                )}
               </Flex>
             </Flex>
           </Box>

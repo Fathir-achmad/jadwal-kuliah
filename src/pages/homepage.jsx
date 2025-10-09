@@ -2,10 +2,11 @@ import { Box, Center } from "@chakra-ui/react";
 import { Clock } from "../components/clock";
 import { NextClass } from "../components/jadwal";
 import { ScheduleTable } from "../components/allJadwal";
+import { ProgressKuliah } from "../components/progressbar";
 
 export const HomePage = () => {
   return (
-    <Box bgColor={"#27374D"} minH={"100vh"} p={4}>
+    <Box bgColor={"#27374D"} minH={"100vh"}>
       <Center>
         <Box
           w={{ base: "95%", sm: "90%", md: "600px", lg: "800px" }}
@@ -18,6 +19,7 @@ export const HomePage = () => {
           <Clock />
           <Box mt={6} w="100%">
             <NextClass />
+            <ProgressKuliah/>
           </Box>
         </Box>
       </Center>
